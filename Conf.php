@@ -294,6 +294,9 @@ function configKeyExists($route): bool
     }
 
     // validating route
+    if (isset(Conf::$appConfig[$route[0]]) === false) {
+        return false;
+    }
     $value = Conf::$appConfig[$route[0]];
 
     for ($i = 1; $i < count($route); $i ++) {

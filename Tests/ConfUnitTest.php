@@ -278,4 +278,16 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
         $value = \Mezon\Conf\Conf::getConfigValue('connection/password', false);
         $this->assertEquals('password', $value, 'Key connection/password was not found');
     }
+
+    /**
+     */
+    public function testConfigKeyExists(): void
+    {
+        // setup
+        \Mezon\Conf\Conf::setConfigValue('existing', 'value');
+
+        // test body and assertions
+        $this->assertTrue(\Mezon\Conf\Conf::configKeyExists('existing'));
+        $this->assertFalse(\Mezon\Conf\Conf::configKeyExists('unexisting'));
+    }
 }

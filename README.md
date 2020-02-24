@@ -1,3 +1,5 @@
+# Conf [![Build Status](https://travis-ci.com/alexdodonov/mezon-conf.svg?branch=master)](https://travis-ci.com/alexdodonov/mezon-conf) [![codecov](https://codecov.io/gh/alexdodonov/mezon-conf/branch/master/graph/badge.svg)](https://codecov.io/gh/alexdodonov/mezon-conf)
+
 # Configuration
 Mezon has it's own config. It can be accesed with a set of functions, wich are described below.
 
