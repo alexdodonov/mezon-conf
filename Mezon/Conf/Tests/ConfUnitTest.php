@@ -1,6 +1,10 @@
 <?php
+namespace Mezon\Conf\Tests;
 
-class ConfUnitTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+use Mezon\Conf\Conf;
+
+class ConfUnitTest extends TestCase
 {
 
     /**
@@ -9,15 +13,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetExistingKey()
     {
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             '@app-http-path'
         ]);
 
         $this->assertEquals(false, $value, 'Invalid @app-http-path value');
 
-        \Mezon\Conf\Conf::setConfigValue('@app-http-path', 'set-value');
+        Conf::setConfigValue('@app-http-path', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             '@app-http-path'
         ]);
 
@@ -30,15 +34,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetUnexistingKey()
     {
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
         $this->assertEquals(false, $value);
 
-        \Mezon\Conf\Conf::setConfigValue('unexisting-key', 'set-value');
+        Conf::setConfigValue('unexisting-key', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
@@ -51,7 +55,7 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testSetComplexUnexistingKey()
     {
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'res',
             'images',
             'unexisting-key'
@@ -59,7 +63,7 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(false, $value, 'Invalid res/images/unexisting-key processing');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'res',
             'images',
             'unexisting-key'
@@ -67,9 +71,9 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('default', $value, 'Invalid res/images/unexisting-key processing');
 
-        \Mezon\Conf\Conf::setConfigValue('res/images/unexisting-key', 'set-value');
+        Conf::setConfigValue('res/images/unexisting-key', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'res',
             'images',
             'unexisting-key'
@@ -83,16 +87,16 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddComplexExistingArray()
     {
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'res',
             'css'
         ]);
 
         $this->assertStringContainsString('', $value, 'Invalid css files list');
 
-        \Mezon\Conf\Conf::addConfigValue('res/css', 'set-value');
+        Conf::addConfigValue('res/css', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'res',
             'css'
         ]);
@@ -105,19 +109,19 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddComplexUnexistingArray()
     {
-        \Mezon\Conf\Conf::deleteConfigValue([
+        Conf::deleteConfigValue([
             'unexisting-key'
         ]);
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
         $this->assertEquals(false, $value);
 
-        \Mezon\Conf\Conf::addConfigValue('unexisting-key', 'set-value');
+        Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
@@ -129,19 +133,19 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddUnexistingArray()
     {
-        \Mezon\Conf\Conf::deleteConfigValue([
+        Conf::deleteConfigValue([
             'unexisting-key'
         ]);
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
         $this->assertEquals(false, $value);
 
-        \Mezon\Conf\Conf::addConfigValue('unexisting-key', 'set-value');
+        Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
@@ -153,10 +157,10 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddExistingArray()
     {
-        \Mezon\Conf\Conf::addConfigValue('unexisting-key', 'set-value-1');
-        \Mezon\Conf\Conf::addConfigValue('unexisting-key', 'set-value-2');
+        Conf::addConfigValue('unexisting-key', 'set-value-1');
+        Conf::addConfigValue('unexisting-key', 'set-value-2');
 
-        $value = \Mezon\Conf\Conf::getConfigValue([
+        $value = Conf::getConfigValue([
             'unexisting-key'
         ]);
 
@@ -168,9 +172,9 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testComplexStringRoutes()
     {
-        \Mezon\Conf\Conf::setConfigValue('f1/f2/unexisting-key', 'set-value-1');
+        Conf::setConfigValue('f1/f2/unexisting-key', 'set-value-1');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('f1/f2/unexisting-key');
+        $value = Conf::getConfigValue('f1/f2/unexisting-key');
 
         $this->assertEquals('set-value-1', $value);
     }
@@ -180,15 +184,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeleteFirstValue()
     {
-        \Mezon\Conf\Conf::setConfigValue('key-1', 'value');
+        Conf::setConfigValue('key-1', 'value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('key-1');
+        $value = Conf::getConfigValue('key-1');
 
         $this->assertEquals('value', $value, 'Invalid setting value');
 
-        \Mezon\Conf\Conf::deleteConfigValue('key-1');
+        Conf::deleteConfigValue('key-1');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('key-1', false);
+        $value = Conf::getConfigValue('key-1', false);
 
         $this->assertEquals(false, $value);
     }
@@ -198,15 +202,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeleteNextValue()
     {
-        \Mezon\Conf\Conf::setConfigValue('key-2/key-3', 'value');
+        Conf::setConfigValue('key-2/key-3', 'value');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('key-2/key-3');
+        $value = Conf::getConfigValue('key-2/key-3');
 
         $this->assertEquals('value', $value, 'Invalid setting value');
 
-        \Mezon\Conf\Conf::deleteConfigValue('key-2/key-3');
+        Conf::deleteConfigValue('key-2/key-3');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('key-2/key-3', false);
+        $value = Conf::getConfigValue('key-2/key-3', false);
 
         $this->assertEquals(false, $value);
     }
@@ -216,32 +220,13 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeleteEmptyKeys()
     {
-        \Mezon\Conf\Conf::setConfigValue('key-4/key-5', 'value');
+        Conf::setConfigValue('key-4/key-5', 'value');
 
-        \Mezon\Conf\Conf::deleteConfigValue('key-4/key-5');
+        Conf::deleteConfigValue('key-4/key-5');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('key-4', false);
+        $value = Conf::getConfigValue('key-4', false);
 
         $this->assertEquals(false, $value);
-    }
-
-    /**
-     * No deleting not empty keys.
-     */
-    public function testNoDeleteNotEmptyKeys()
-    {
-        \Mezon\Conf\Conf::setConfigValue('key-6/key-7', 'value');
-        \Mezon\Conf\Conf::setConfigValue('key-6/key-8', 'value');
-
-        \Mezon\Conf\Conf::deleteConfigValue('key-6/key-7');
-
-        $value = \Mezon\Conf\Conf::getConfigValue('key-6', false);
-
-        $this->assertEquals(true, is_array($value), 'Key was deleted');
-
-        $value = \Mezon\Conf\Conf::getConfigValue('key-6/key-8', false);
-
-        $this->assertEquals('value', $value, 'Key was deleted');
     }
 
     /**
@@ -249,15 +234,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeleteResult()
     {
-        \Mezon\Conf\Conf::setConfigValue('key-9/key-10', 'value');
+        Conf::setConfigValue('key-9/key-10', 'value');
 
         // deleting unexisting value
-        $result = \Mezon\Conf\Conf::deleteConfigValue('key-9/key-unexisting');
+        $result = Conf::deleteConfigValue('key-9/key-unexisting');
 
         $this->assertEquals(false, $result, 'Invalid deleting result');
 
         // deleting existing value
-        $result = \Mezon\Conf\Conf::deleteConfigValue('key-9/key-10');
+        $result = Conf::deleteConfigValue('key-9/key-10');
 
         $this->assertEquals(true, $result, 'Invalid deleting result');
     }
@@ -267,15 +252,15 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
      */
     public function testFastDbSetup()
     {
-        \Mezon\Conf\Conf::addConnectionToConfig('connection', 'dsn', 'user', 'password');
+        Conf::addConnectionToConfig('connection', 'dsn', 'user', 'password');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('connection/dsn', false);
+        $value = Conf::getConfigValue('connection/dsn', false);
         $this->assertEquals('dsn', $value, 'Key connection/dsn was not found');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('connection/user', false);
+        $value = Conf::getConfigValue('connection/user', false);
         $this->assertEquals('user', $value, 'Key connection/user was not found');
 
-        $value = \Mezon\Conf\Conf::getConfigValue('connection/password', false);
+        $value = Conf::getConfigValue('connection/password', false);
         $this->assertEquals('password', $value, 'Key connection/password was not found');
     }
 
@@ -284,10 +269,10 @@ class ConfUnitTest extends \PHPUnit\Framework\TestCase
     public function testConfigKeyExists(): void
     {
         // setup
-        \Mezon\Conf\Conf::setConfigValue('existing', 'value');
+        Conf::setConfigValue('existing', 'value');
 
         // test body and assertions
-        $this->assertTrue(\Mezon\Conf\Conf::configKeyExists('existing'));
-        $this->assertFalse(\Mezon\Conf\Conf::configKeyExists('unexisting'));
+        $this->assertTrue(Conf::configKeyExists('existing'));
+        $this->assertFalse(Conf::configKeyExists('unexisting'));
     }
 }

@@ -10,6 +10,9 @@
 			"role": "Founder"
 		}
 	],
+	"require-dev": {
+		"phpunit/phpunit": "^8.5"
+	},
 	"require": {
 		"php": ">=7.2.0"
 	},
@@ -23,7 +26,10 @@
 	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
-			"Mezon\\Conf\\": ""
+			"Mezon\\": "./Mezon/"
 		}
+	},
+	"scripts": {
+		"test": "php ./vendor/phpunit/phpunit/phpunit"
 	}
 }

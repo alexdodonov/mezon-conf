@@ -141,13 +141,16 @@ class Conf
 function expandString($value)
 {
     if (is_string($value)) {
-        $value = str_replace([
-            \Mezon\Conf\Conf::APP_HTTP_PATH_STRING,
-            \Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING
-        ], [
-            @Conf::$appConfig[\Mezon\Conf\Conf::APP_HTTP_PATH_STRING],
-            @Conf::$appConfig[\Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING]
-        ], $value);
+        $value = str_replace(
+            [
+                \Mezon\Conf\Conf::APP_HTTP_PATH_STRING,
+                \Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING
+            ],
+            [
+                @Conf::$appConfig[\Mezon\Conf\Conf::APP_HTTP_PATH_STRING],
+                @Conf::$appConfig[\Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING]
+            ],
+            $value);
     } elseif (is_array($value)) {
         foreach ($value as $fieldName => $fieldValue) {
             $value[$fieldName] = expandString($fieldValue);
@@ -173,48 +176,17 @@ function expandString($value)
  */
 function getConfigValue($route, $defaultValue = false)
 {
-    if (is_string($route)) {
-        $route = explode('/', $route);
+    if (is_array($route)) {
+        $route = implode('/', $route);
     }
 
-    if (isset(Conf::$appConfig[$route[0]]) === false) {
+    if (isset(Conf::$appConfig[$route]) === false) {
         return $defaultValue;
     }
 
-    $value = Conf::$appConfig[$route[0]];
-
-    for ($i = 1; $i < count($route); $i ++) {
-        if (isset($value[$route[$i]]) === false) {
-            return $defaultValue;
-        }
-
-        $value = $value[$route[$i]];
-    }
+    $value = Conf::$appConfig[$route];
 
     return expandString($value);
-}
-
-/**
- * Setting config value
- *
- * @param array $config
- *            Config values
- * @param array $route
- *            Route to key
- * @param mixed $value
- *            Value to be set
- */
-function _setConfigValueRec(array &$config, array $route, $value)
-{
-    if (isset($config[$route[0]]) === false) {
-        $config[$route[0]] = [];
-    }
-
-    if (count($route) > 1) {
-        _setConfigValueRec($config[$route[0]], array_slice($route, 1), $value);
-    } elseif (count($route) == 1) {
-        $config[$route[0]] = $value;
-    }
 }
 
 /**
@@ -227,36 +199,7 @@ function _setConfigValueRec(array &$config, array $route, $value)
  */
 function setConfigValue($route, $value)
 {
-    $route = explode('/', $route);
-
-    if (count($route) > 1) {
-        _setConfigValueRec(Conf::$appConfig, $route, $value);
-    } else {
-        Conf::$appConfig[$route[0]] = $value;
-    }
-}
-
-/**
- * Additing value
- *
- * @param array $config
- *            Config values
- * @param array $route
- *            Route to key
- * @param mixed $value
- *            Value to be set
- */
-function _addConfigValueRec(array &$config, array $route, $value)
-{
-    if (isset($config[$route[0]]) === false) {
-        $config[$route[0]] = [];
-    }
-
-    if (count($route) > 1) {
-        _addConfigValueRec($config[$route[0]], array_slice($route, 1), $value);
-    } elseif (count($route) == 1) {
-        $config[$route[0]][] = $value;
-    }
+    Conf::$appConfig[$route] = $value;
 }
 
 /**
@@ -269,15 +212,9 @@ function _addConfigValueRec(array &$config, array $route, $value)
  */
 function addConfigValue(string $route, $value)
 {
-    $route = explode('/', $route);
-
-    if (count($route) > 1) {
-        _addConfigValueRec(Conf::$appConfig, $route, $value);
-    } else {
-        Conf::$appConfig[$route[0]] = [
-            $value
-        ];
-    }
+    Conf::$appConfig[$route] = [
+        $value
+    ];
 }
 
 /**
@@ -289,49 +226,11 @@ function addConfigValue(string $route, $value)
  */
 function configKeyExists($route): bool
 {
-    if (is_string($route)) {
-        $route = explode('/', $route);
+    if (is_array($route)) {
+        $route = implode('/', $route);
     }
 
-    // validating route
-    if (isset(Conf::$appConfig[$route[0]]) === false) {
-        return false;
-    }
-    $value = Conf::$appConfig[$route[0]];
-
-    for ($i = 1; $i < count($route); $i ++) {
-        if (isset($value[$route[$i]]) === false) {
-            return false;
-        }
-
-        $value = $value[$route[$i]];
-    }
-
-    return true;
-}
-
-/**
- * Deleting config element
- *
- * @param array $routeParts
- *            Route parts
- * @param array $configPart
- *            Config part
- */
-function _deleteConfig(array $routeParts, array &$configPart)
-{
-    if (count($routeParts) == 1) {
-        // don't go deeper and delete the found staff
-        unset($configPart[$routeParts[0]]);
-    } else {
-        // go deeper
-        _deleteConfig(array_splice($routeParts, 1), $configPart[$routeParts[0]]);
-
-        if (count($configPart[$routeParts[0]]) == 0) {
-            // remove empty parents
-            unset($configPart[$routeParts[0]]);
-        }
-    }
+    return isset(Conf::$appConfig[$route]);
 }
 
 /**
@@ -343,8 +242,8 @@ function _deleteConfig(array $routeParts, array &$configPart)
  */
 function deleteConfigValue($route): bool
 {
-    if (is_string($route)) {
-        $route = explode('/', $route);
+    if (is_array($route)) {
+        $route = implode('/', $route);
     }
 
     if (configKeyExists($route) === false) {
@@ -352,7 +251,7 @@ function deleteConfigValue($route): bool
     }
 
     // route exists, so delete it
-    _deleteConfig($route, Conf::$appConfig);
+    unset(Conf::$appConfig[$route]);
 
     return true;
 }
