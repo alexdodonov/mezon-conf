@@ -265,6 +265,7 @@ class ConfUnitTest extends TestCase
     }
 
     /**
+     * Testing for key existence
      */
     public function testConfigKeyExists(): void
     {
@@ -274,5 +275,21 @@ class ConfUnitTest extends TestCase
         // test body and assertions
         $this->assertTrue(Conf::configKeyExists('existing'));
         $this->assertFalse(Conf::configKeyExists('unexisting'));
+    }
+
+    /**
+     * Testing method getExpandedConfigValue
+     */
+    public function testGetExpandedString(): void
+    {
+        // setup
+        Conf::setConfigValue('some-var', 'some {var}');
+        Conf::setConfigValue('var', 'var');
+
+        // test body
+        $result = Conf::getExpandedConfigValue('some-var');
+
+        // assertions
+        $this->assertEquals('some var', $result);
     }
 }

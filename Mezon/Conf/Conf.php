@@ -1,6 +1,8 @@
 <?php
 namespace Mezon\Conf;
 
+use Mezon\TemplateEngine;
+
 /**
  * Configuration routines
  *
@@ -129,6 +131,17 @@ class Conf
     {
         return \Mezon\Conf\expandString($value);
     }
+
+    /**
+     * Method returns expanded config string
+     *
+     * @param mixed $route
+     *            Route to key
+     */
+    public static function getExpandedConfigValue($route, $defaultValue = false)
+    {
+        return expandString(\Mezon\Conf\getConfigValue($route, $defaultValue));
+    }
 }
 
 /**
@@ -151,6 +164,12 @@ function expandString($value)
                 @Conf::$appConfig[\Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING]
             ],
             $value);
+
+        foreach (Conf::$appConfig as $key => $var) {
+            if (is_scalar($var)) {
+                $value = str_replace('{' . $key . '}', $var, $value);
+            }
+        }
     } elseif (is_array($value)) {
         foreach ($value as $fieldName => $fieldValue) {
             $value[$fieldName] = expandString($fieldValue);
