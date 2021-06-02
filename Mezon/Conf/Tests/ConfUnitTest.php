@@ -11,7 +11,7 @@ class ConfUnitTest extends TestCase
      * Testing setup of the existing key.
      * It's value must be overwritten.
      */
-    public function testSetExistingKey()
+    public function testSetExistingKey(): void
     {
         $value = Conf::getConfigValue([
             '@app-http-path'
@@ -32,7 +32,7 @@ class ConfUnitTest extends TestCase
      * Testing setup of the unexisting key.
      * It's value must be overwritten.
      */
-    public function testSetUnexistingKey()
+    public function testSetUnexistingKey(): void
     {
         $value = Conf::getConfigValue([
             'unexisting-key'
@@ -53,7 +53,7 @@ class ConfUnitTest extends TestCase
      * Testing setup of the unexisting key with complex route.
      * It's value must be overwritten.
      */
-    public function testSetComplexUnexistingKey()
+    public function testSetComplexUnexistingKey(): void
     {
         $value = Conf::getConfigValue([
             'res',
@@ -85,7 +85,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing setup of the existing array.
      */
-    public function testAddComplexExistingArray()
+    public function testAddComplexExistingArray(): void
     {
         $value = Conf::getConfigValue([
             'res',
@@ -107,7 +107,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing setup of the unexisting array.
      */
-    public function testAddComplexUnexistingArray()
+    public function testAddComplexUnexistingArray(): void
     {
         Conf::deleteConfigValue([
             'unexisting-key'
@@ -131,7 +131,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing setup of the unexisting array with simple route.
      */
-    public function testAddUnexistingArray()
+    public function testAddUnexistingArray(): void
     {
         Conf::deleteConfigValue([
             'unexisting-key'
@@ -155,7 +155,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing setup of the existing array with simple route.
      */
-    public function testAddExistingArray()
+    public function testAddExistingArray(): void
     {
         Conf::addConfigValue('unexisting-key', 'set-value-1');
         Conf::addConfigValue('unexisting-key', 'set-value-2');
@@ -170,7 +170,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing setup of the existing array with simple route.
      */
-    public function testComplexStringRoutes()
+    public function testComplexStringRoutes(): void
     {
         Conf::setConfigValue('f1/f2/unexisting-key', 'set-value-1');
 
@@ -182,7 +182,7 @@ class ConfUnitTest extends TestCase
     /**
      * Deleting simple key.
      */
-    public function testDeleteFirstValue()
+    public function testDeleteFirstValue(): void
     {
         Conf::setConfigValue('key-1', 'value');
 
@@ -200,7 +200,7 @@ class ConfUnitTest extends TestCase
     /**
      * Deleting deep key.
      */
-    public function testDeleteNextValue()
+    public function testDeleteNextValue(): void
     {
         Conf::setConfigValue('key-2/key-3', 'value');
 
@@ -218,7 +218,7 @@ class ConfUnitTest extends TestCase
     /**
      * Deleting empty keys.
      */
-    public function testDeleteEmptyKeys()
+    public function testDeleteEmptyKeys(): void
     {
         Conf::setConfigValue('key-4/key-5', 'value');
 
@@ -232,7 +232,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing delete results.
      */
-    public function testDeleteResult()
+    public function testDeleteResult(): void
     {
         Conf::setConfigValue('key-9/key-10', 'value');
 
@@ -250,7 +250,7 @@ class ConfUnitTest extends TestCase
     /**
      * Testing fas BD setup.
      */
-    public function testFastDbSetup()
+    public function testFastDbSetup(): void
     {
         Conf::addConnectionToConfig('connection', 'dsn', 'user', 'password');
 

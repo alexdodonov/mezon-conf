@@ -42,7 +42,7 @@ class Conf
      * Function returns specified config key
      * If the key does not exists then $defaultValue will be returned
      *
-     * @param string $route
+     * @param string|array $route
      *            Key route in config
      * @param mixed $defaultValue
      *            Default value if the key was not found
@@ -56,12 +56,12 @@ class Conf
     /**
      * Function sets specified config key with value $value
      *
-     * @param array $route
+     * @param string $route
      *            Route to key
      * @param mixed $value
      *            Value to be set
      */
-    public static function setConfigValue($route, $value)
+    public static function setConfigValue(string $route, $value): void
     {
         \Mezon\Conf\setConfigValue($route, $value);
     }
@@ -74,7 +74,7 @@ class Conf
      * @param mixed $value
      *            Value to be set
      */
-    public static function addConfigValue(string $route, $value)
+    public static function addConfigValue(string $route, $value): void
     {
         \Mezon\Conf\addConfigValue($route, $value);
     }
@@ -107,25 +107,25 @@ class Conf
      * Method sets connection details to config
      *
      * @param string $name
-     *            Config key
-     * @param string $dSN
+     *            config key
+     * @param string $dsn
      *            DSN
      * @param string $user
      *            DB User login
      * @param string $password
      *            DB User password
      */
-    public static function addConnectionToConfig(string $name, string $dSN, string $user, string $password)
+    public static function addConnectionToConfig(string $name, string $dsn, string $user, string $password): void
     {
-        \Mezon\Conf\addConnectionToConfig($name, $dSN, $user, $password);
+        \Mezon\Conf\addConnectionToConfig($name, $dsn, $user, $password);
     }
 
     /**
      * Method expands string
      *
      * @param string $value
-     *            value to be expanded;
-     * @return mixed Expanded value.
+     *            value to be expanded
+     * @return mixed Expanded value
      */
     public static function expandString($value)
     {
@@ -136,7 +136,10 @@ class Conf
      * Method returns expanded config string
      *
      * @param mixed $route
-     *            Route to key
+     *            route to key
+     * @param mixed $defaultValue
+     *            default value
+     * @return mixed expandend config value
      */
     public static function getExpandedConfigValue($route, $defaultValue = false)
     {
@@ -147,9 +150,9 @@ class Conf
 /**
  * Method expands string
  *
- * @param string $value
- *            value to be expanded;
- * @return mixed Expanded value.
+ * @param object|string|array|mixed $value
+ *            value to be expanded
+ * @return mixed expanded value
  */
 function expandString($value)
 {
@@ -166,7 +169,7 @@ function expandString($value)
             $value);
 
         foreach (Conf::$appConfig as $key => $var) {
-            if (is_scalar($var)) {
+            if (is_string($var)) {
                 $value = str_replace('{' . $key . '}', $var, $value);
             }
         }
@@ -187,10 +190,10 @@ function expandString($value)
  * Function returns specified config key
  * If the key does not exists then $defaultValue will be returned
  *
- * @param string $route
- *            Key route in config
+ * @param string|array $route
+ *            key route in config
  * @param mixed $defaultValue
- *            Default value if the key was not found
+ *            default value if the key was not found
  * @return mixed Key value
  */
 function getConfigValue($route, $defaultValue = false)
@@ -211,12 +214,12 @@ function getConfigValue($route, $defaultValue = false)
 /**
  * Function sets specified config key with value $value
  *
- * @param array $route
- *            Route to key
+ * @param string $route
+ *            route to key
  * @param mixed $value
- *            Value to be set
+ *            value to be set
  */
-function setConfigValue($route, $value)
+function setConfigValue(string $route, $value): void
 {
     Conf::$appConfig[$route] = $value;
 }
@@ -225,11 +228,11 @@ function setConfigValue($route, $value)
  * Function adds specified value $value into array with path $route in the config
  *
  * @param string $route
- *            Route to key
+ *            route to key
  * @param mixed $value
- *            Value to be set
+ *            value to be set
  */
-function addConfigValue(string $route, $value)
+function addConfigValue(string $route, $value): void
 {
     Conf::$appConfig[$route] = [
         $value
@@ -240,8 +243,8 @@ function addConfigValue(string $route, $value)
  * Validating key existance
  *
  * @param mixed $route
- *            Route to key
- * @return bool True if the key exists, false otherwise
+ *            route to key
+ * @return bool true if the key exists, false otherwise
  */
 function configKeyExists($route): bool
 {
@@ -256,8 +259,8 @@ function configKeyExists($route): bool
  * Deleting config value
  *
  * @param mixed $route
- *            Route to key
- * @return bool True if the key was deleted, false otherwise
+ *            route to key
+ * @return bool true if the key was deleted, false otherwise
  */
 function deleteConfigValue($route): bool
 {
@@ -279,17 +282,17 @@ function deleteConfigValue($route): bool
  * Method sets connection details to config
  *
  * @param string $name
- *            Config key
- * @param string $dSN
+ *            config key
+ * @param string $dsn
  *            DSN
  * @param string $user
- *            DB User login
+ *            DB user login
  * @param string $password
- *            DB User password
+ *            DB user password
  */
-function addConnectionToConfig(string $name, string $dSN, string $user, string $password)
+function addConnectionToConfig(string $name, string $dsn, string $user, string $password): void
 {
-    setConfigValue($name . '/dsn', $dSN);
+    setConfigValue($name . '/dsn', $dsn);
     setConfigValue($name . '/user', $user);
     setConfigValue($name . '/password', $password);
 }
