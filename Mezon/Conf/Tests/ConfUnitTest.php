@@ -4,6 +4,7 @@ namespace Mezon\Conf\Tests;
 use PHPUnit\Framework\TestCase;
 use Mezon\Conf\Conf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 class ConfUnitTest extends TestCase
 {
 
