@@ -4,13 +4,26 @@ namespace Mezon\Conf\Tests;
 use PHPUnit\Framework\TestCase;
 use Mezon\Conf\Conf;
 
-/** @psalm-suppress PropertyNotSetInConstructor */
+/**
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class ConfUnitTest extends TestCase
 {
 
     /**
-     * Testing setup of the existing key.
-     * It's value must be overwritten.
+     *
+     * {@inheritdoc}
+     * @see \PHPUnit\Framework\TestCase::setUp()
+     */
+    protected function setUp(): void
+    {
+        Conf::clear();
+    }
+
+    /**
+     * Testing setup of the existing key
+     * It's value must be overwritten
      */
     public function testSetExistingKey(): void
     {
@@ -30,29 +43,25 @@ class ConfUnitTest extends TestCase
     }
 
     /**
-     * Testing setup of the unexisting key.
-     * It's value must be overwritten.
+     * Testing setup of the unexisting key
+     * It's value must be overwritten
      */
     public function testSetUnexistingKey(): void
     {
-        $value = Conf::getConfigValue([
+        $this->assertFalse(Conf::getConfigValue([
             'unexisting-key'
-        ]);
-
-        $this->assertEquals(false, $value);
+        ]));
 
         Conf::setConfigValue('unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $this->assertEquals('set-value', Conf::getConfigValue([
             'unexisting-key'
-        ]);
-
-        $this->assertEquals('set-value', $value);
+        ]));
     }
 
     /**
-     * Testing setup of the unexisting key with complex route.
-     * It's value must be overwritten.
+     * Testing setup of the unexisting key with complex route
+     * It's value must be overwritten
      */
     public function testSetComplexUnexistingKey(): void
     {
@@ -279,18 +288,18 @@ class ConfUnitTest extends TestCase
     }
 
     /**
-     * Testing method getExpandedConfigValue
+     * Testing method setConfigValues
      */
-    public function testGetExpandedString(): void
+    public function testSetConfigValues(): void
     {
-        // setup
-        Conf::setConfigValue('some-var', 'some {var}');
-        Conf::setConfigValue('var', 'var');
-
-        // test body
-        $result = Conf::getExpandedConfigValue('some-var');
+        // setupa and test body
+        Conf::setConfigValues([
+            'setting1' => 'value1',
+            'setting2' => 'value2'
+        ]);
 
         // assertions
-        $this->assertEquals('some var', $result);
+        $this->assertEquals('value1', Conf::getConfigValue('setting1'));
+        $this->assertEquals('value2', Conf::getConfigValue('setting2'));
     }
 }

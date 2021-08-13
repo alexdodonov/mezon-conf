@@ -1,8 +1,6 @@
 <?php
 namespace Mezon\Conf;
 
-use Mezon\TemplateEngine;
-
 /**
  * Configuration routines
  *
@@ -64,6 +62,19 @@ class Conf
     public static function setConfigValue(string $route, $value): void
     {
         \Mezon\Conf\setConfigValue($route, $value);
+    }
+
+    /**
+     * Function sets specified $settings
+     *
+     * @param array $settings
+     *            pair of routes and values
+     */
+    public static function setConfigValues(array $settings): void
+    {
+        foreach ($settings as $route => $value) {
+            static::setConfigValue($route, $value);
+        }
     }
 
     /**
@@ -144,6 +155,14 @@ class Conf
     public static function getExpandedConfigValue($route, $defaultValue = false)
     {
         return expandString(\Mezon\Conf\getConfigValue($route, $defaultValue));
+    }
+
+    /**
+     * Method clears config data
+     */
+    public static function clear(): void
+    {
+        Conf::$appConfig = [];
     }
 }
 
