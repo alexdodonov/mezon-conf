@@ -158,6 +158,21 @@ class Conf
     }
 
     /**
+     * Method loads config from JSON file
+     *
+     * @param string $path
+     *            path to the config
+     */
+    public static function loadConfigFromJson(string $path): void
+    {
+        $data = json_decode(file_get_contents($path));
+
+        foreach ($data as $route => $value) {
+            static::setConfigValue($route, $value);
+        }
+    }
+
+    /**
      * Method clears config data
      */
     public static function clear(): void

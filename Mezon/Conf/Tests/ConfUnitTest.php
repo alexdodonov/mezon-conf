@@ -286,20 +286,4 @@ class ConfUnitTest extends TestCase
         $this->assertTrue(Conf::configKeyExists('existing'));
         $this->assertFalse(Conf::configKeyExists('unexisting'));
     }
-
-    /**
-     * Testing method setConfigValues
-     */
-    public function testSetConfigValues(): void
-    {
-        // setupa and test body
-        Conf::setConfigValues([
-            'setting1' => 'value1',
-            'setting2' => 'value2'
-        ]);
-
-        // assertions
-        $this->assertEquals('value1', Conf::getConfigValue('setting1'));
-        $this->assertEquals('value2', Conf::getConfigValue('setting2'));
-    }
 }
