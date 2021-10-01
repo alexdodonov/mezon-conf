@@ -273,17 +273,4 @@ class ConfUnitTest extends TestCase
         $value = Conf::getConfigValue('connection/password', false);
         $this->assertEquals('password', $value, 'Key connection/password was not found');
     }
-
-    /**
-     * Testing for key existence
-     */
-    public function testConfigKeyExists(): void
-    {
-        // setup
-        Conf::setConfigValue('existing', 'value');
-
-        // test body and assertions
-        $this->assertTrue(Conf::configKeyExists('existing'));
-        $this->assertFalse(Conf::configKeyExists('unexisting'));
-    }
 }
