@@ -165,11 +165,7 @@ class Conf
      */
     public static function loadConfigFromJson(string $path): void
     {
-        $data = json_decode(file_get_contents($path));
-
-        foreach ($data as $route => $value) {
-            static::setConfigValue($route, $value);
-        }
+        static::setConfigValues(json_decode(file_get_contents($path), true));
     }
 
     /**
