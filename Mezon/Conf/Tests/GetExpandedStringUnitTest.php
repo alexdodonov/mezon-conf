@@ -31,7 +31,7 @@ class GetExpandedStringUnitTest extends TestCase
         Conf::setConfigValue('var', 'var');
 
         // test body
-        $result = Conf::getExpandedConfigValueAsString('some-var');
+        $result = Conf::getConfigValueAsString('some-var');
 
         // assertions
         $this->assertEquals('some var', $result);
@@ -46,7 +46,7 @@ class GetExpandedStringUnitTest extends TestCase
         Conf::setConfigValue('some-var', 'some {var}');
 
         // test body
-        $result = Conf::getExpandedConfigValueAsString('some-var');
+        $result = Conf::getConfigValueAsString('some-var');
 
         // assertions
         $this->assertEquals('some {var}', $result);
@@ -58,7 +58,7 @@ class GetExpandedStringUnitTest extends TestCase
     public function testGetExpandedStringUnexistingVar(): void
     {
         // test body
-        $result = Conf::getExpandedConfigValueAsString('some-var');
+        $result = Conf::getConfigValueAsString('some-var');
 
         // assertions
         $this->assertEquals('', $result);

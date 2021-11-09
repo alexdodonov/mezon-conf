@@ -106,7 +106,7 @@ class ConfUnitTest extends TestCase
 
         Conf::addConfigValue('res/css', 'set-value');
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'res',
             'css'
         ]);
@@ -123,15 +123,15 @@ class ConfUnitTest extends TestCase
             'unexisting-key'
         ]);
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'unexisting-key'
         ]);
 
-        $this->assertEquals(false, $value);
+        $this->assertEquals([], $value);
 
         Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'unexisting-key'
         ]);
 
@@ -147,15 +147,15 @@ class ConfUnitTest extends TestCase
             'unexisting-key'
         ]);
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'unexisting-key'
         ]);
 
-        $this->assertEquals(false, $value);
+        $this->assertEquals([], $value);
 
         Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'unexisting-key'
         ]);
 
@@ -170,7 +170,7 @@ class ConfUnitTest extends TestCase
         Conf::addConfigValue('unexisting-key', 'set-value-1');
         Conf::addConfigValue('unexisting-key', 'set-value-2');
 
-        $value = Conf::getConfigValueAsString([
+        $value = Conf::getConfigValueAsArray([
             'unexisting-key'
         ]);
 
@@ -202,9 +202,9 @@ class ConfUnitTest extends TestCase
 
         Conf::deleteConfigValue('key-1');
 
-        $value = Conf::getConfigValueAsString('key-1', false);
+        $value = Conf::getConfigValueAsString('key-1', '');
 
-        $this->assertEquals(false, $value);
+        $this->assertEquals('', $value);
     }
 
     /**
@@ -220,9 +220,9 @@ class ConfUnitTest extends TestCase
 
         Conf::deleteConfigValue('key-2/key-3');
 
-        $value = Conf::getConfigValueAsString('key-2/key-3', false);
+        $value = Conf::getConfigValueAsString('key-2/key-3', '');
 
-        $this->assertEquals(false, $value);
+        $this->assertEquals('', $value);
     }
 
     /**
@@ -234,9 +234,9 @@ class ConfUnitTest extends TestCase
 
         Conf::deleteConfigValue('key-4/key-5');
 
-        $value = Conf::getConfigValueAsString('key-4', false);
+        $value = Conf::getConfigValueAsString('key-4', '');
 
-        $this->assertEquals(false, $value);
+        $this->assertEquals('', $value);
     }
 
     /**

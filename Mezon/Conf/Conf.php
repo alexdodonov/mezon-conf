@@ -32,7 +32,7 @@ class Conf
     /**
      * Config data
      *
-     * @var array
+     * @var array<string, string|object|array|mixed>
      */
     public static $appConfig = [];
 
@@ -40,31 +40,40 @@ class Conf
      * Function returns specified config key
      * If the key does not exists then $defaultValue will be returned
      *
-     * @param string|array $route
-     *            Key route in config
-     * @param mixed $defaultValue
-     *            Default value if the key was not found
-     * @return mixed Key value
-     * @deprecated Use getConfigValueAsString
+     * @param string|string[] $route
+     *            key route in config
+     * @param string $defaultValue
+     *            default value if the key was not found
+     * @return string key value
      */
-    public static function getConfigValue($route, $defaultValue = false)
+    public static function getConfigValueAsString($route, string $defaultValue = ''): string
     {
-        return getConfigValue($route, $defaultValue);
+        return getConfigValueAsString($route, $defaultValue);
     }
-    
+
     /**
      * Function returns specified config key
      * If the key does not exists then $defaultValue will be returned
      *
-     * @param string|array $route
-     *            Key route in config
-     * @param mixed $defaultValue
-     *            Default value if the key was not found
-     * @return string Key value
+     * @param string|string[] $route
+     *            key route in config
+     * @param array $defaultValue
+     *            default value if the key was not found
+     * @return array key value
      */
-    public static function getConfigValueAsString($route, string $defaultValue = '')
+    public static function getConfigValueAsArray($route, array $defaultValue = []): array
     {
-        return getConfigValue($route, $defaultValue);
+        if (is_array($route)) {
+            $route = implode('/', $route);
+        }
+
+        if (isset(Conf::$appConfig[$route]) === false) {
+            return $defaultValue;
+        }
+
+        $value = getValueAsArray($route);
+
+        return expandArrayValue($value);
     }
 
     /**
@@ -77,19 +86,24 @@ class Conf
      */
     public static function setConfigValue(string $route, $value): void
     {
-        setConfigValue($route, $value);
+        if (is_string($value)) {
+            setConfigStringValue($route, $value);
+        } else {
+            throw (new \Exception('Unsupported value type', - 1));
+        }
     }
 
     /**
      * Function sets specified $settings
      *
-     * @param array $settings
+     * @param
+     *            array<string, string|object|array|mixed> $settings
      *            pair of routes and values
      */
     public static function setConfigValues(array $settings): void
     {
-        foreach ($settings as $route => $value) {
-            static::setConfigValue($route, $value);
+        foreach (array_keys($settings) as $route) {
+            static::setConfigValue((string) $route, $settings[$route]);
         }
     }
 
@@ -109,9 +123,9 @@ class Conf
     /**
      * Validating key existance
      *
-     * @param mixed $route
-     *            Route to key
-     * @return bool True if the key exists, false otherwise
+     * @param string|string[] $route
+     *            route to key
+     * @return bool true if the key exists, false otherwise
      */
     public static function configKeyExists($route): bool
     {
@@ -121,9 +135,9 @@ class Conf
     /**
      * Deleting config value
      *
-     * @param mixed $route
-     *            Route to key
-     * @return bool True if the key was deleted, false otherwise
+     * @param string|string[] $route
+     *            route to key
+     * @return bool true if the key was deleted, false otherwise
      */
     public static function deleteConfigValue($route): bool
     {
@@ -160,35 +174,6 @@ class Conf
     }
 
     /**
-     * Method returns expanded config string
-     *
-     * @param mixed $route
-     *            route to key
-     * @param mixed $defaultValue
-     *            default value
-     * @return mixed expandend config value
-     * @deprecated Use getExpandedConfigValueAsString
-     */
-    public static function getExpandedConfigValue($route, $defaultValue = false)
-    {
-        return expandString(getConfigValue($route, $defaultValue));
-    }
-
-    /**
-     * Method returns expanded config string
-     *
-     * @param mixed $route
-     *            route to key
-     * @param string $defaultValue
-     *            default value
-     * @return string expandend config value
-     */
-    public static function getExpandedConfigValueAsString($route, string $defaultValue = ''): string
-    {
-        return expandString(static::getConfigValueAsString($route, $defaultValue));
-    }
-
-    /**
      * Method loads config from JSON file
      *
      * @param string $path
@@ -196,7 +181,7 @@ class Conf
      */
     public static function loadConfigFromJson(string $path): void
     {
-        static::setConfigValues(json_decode(file_get_contents($path), true));
+        static::setConfigValues((array) json_decode(file_get_contents($path), true));
     }
 
     /**
@@ -209,6 +194,50 @@ class Conf
 }
 
 /**
+ * Method returns config item as string
+ *
+ * @param string $route
+ *            key
+ * @param string $defaultValue
+ * @return string value
+ */
+function getValueAsString(string $route, string $defaultValue = ''): string
+{
+    if (! isset(Conf::$appConfig[$route])) {
+        return $defaultValue;
+    }
+
+    if (is_string(Conf::$appConfig[$route])) {
+        return Conf::$appConfig[$route];
+    }
+
+    throw (new \Exception('Value is not a string: ' . $route, - 1));
+}
+
+// TODO remove function and use only methods
+
+/**
+ * Method returns config item as string
+ *
+ * @param string $route
+ *            key
+ * @param array $defaultValue
+ * @return array value
+ */
+function getValueAsArray(string $route, array $defaultValue = []): array
+{
+    if (! isset(Conf::$appConfig[$route])) {
+        return $defaultValue;
+    }
+
+    if (is_array(Conf::$appConfig[$route])) {
+        return Conf::$appConfig[$route];
+    }
+
+    throw (new \Exception('Value is not an array: ' . $route, - 1));
+}
+
+/**
  * Method expands string
  *
  * @param object|string|array|mixed $value
@@ -218,29 +247,72 @@ class Conf
 function expandString($value)
 {
     if (is_string($value)) {
-        $value = str_replace(
-            [
-                \Mezon\Conf\Conf::APP_HTTP_PATH_STRING,
-                \Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING
-            ],
-            [
-                @Conf::$appConfig[\Mezon\Conf\Conf::APP_HTTP_PATH_STRING],
-                @Conf::$appConfig[\Mezon\Conf\Conf::MEZON_HTTP_PATH_STRING]
-            ],
-            $value);
-
-        foreach (Conf::$appConfig as $key => $var) {
-            if (is_string($var)) {
-                $value = str_replace('{' . $key . '}', $var, $value);
-            }
-        }
+        $value = expandStringValue($value);
     } elseif (is_array($value)) {
-        foreach ($value as $fieldName => $fieldValue) {
-            $value[$fieldName] = expandString($fieldValue);
-        }
+        $value = expandArrayValue($value);
     } elseif (is_object($value)) {
-        foreach ($value as $fieldName => $fieldValue) {
-            $value->$fieldName = expandString($fieldValue);
+        $value = expandObjectValue($value);
+    }
+
+    return $value;
+}
+
+/**
+ * Method expands string
+ *
+ * @param string $value
+ *            value to be expanded
+ * @return string expanded value
+ */
+function expandStringValue(string $value): string
+{
+    $value = str_replace([
+        Conf::APP_HTTP_PATH_STRING,
+        Conf::MEZON_HTTP_PATH_STRING
+    ], [
+        getValueAsString(Conf::APP_HTTP_PATH_STRING),
+        getValueAsString(Conf::MEZON_HTTP_PATH_STRING)
+    ], $value);
+
+    foreach (array_keys(Conf::$appConfig) as $key) {
+        if (is_string(Conf::$appConfig[$key])) {
+            $value = str_replace('{' . $key . '}', Conf::$appConfig[$key], $value);
+        }
+    }
+
+    return $value;
+}
+
+/**
+ * Method expands arrays
+ *
+ * @param array<mixed> $value
+ *            value to be expanded
+ * @return array<mixed> expanded value
+ */
+function expandArrayValue(array $value): array
+{
+    foreach (array_keys($value) as $key) {
+        if (is_string($value[$key])) {
+            $value[$key] = expandStringValue($value[$key]);
+        }
+    }
+
+    return $value;
+}
+
+/**
+ * Method expands objects
+ *
+ * @param object $value
+ *            value to be expanded
+ * @return object expanded value
+ */
+function expandObjectValue(object $value): object
+{
+    foreach (array_keys((array) $value) as $key) {
+        if (is_string($value->$key)) {
+            $value->$key = expandStringValue((string) $value->$key);
         }
     }
 
@@ -251,13 +323,13 @@ function expandString($value)
  * Function returns specified config key
  * If the key does not exists then $defaultValue will be returned
  *
- * @param string|array $route
+ * @param string|string[] $route
  *            key route in config
- * @param mixed $defaultValue
+ * @param string $defaultValue
  *            default value if the key was not found
- * @return mixed Key value
+ * @return string key value
  */
-function getConfigValue($route, $defaultValue = false)
+function getConfigValueAsString($route, $defaultValue = ''): string
 {
     if (is_array($route)) {
         $route = implode('/', $route);
@@ -267,9 +339,9 @@ function getConfigValue($route, $defaultValue = false)
         return $defaultValue;
     }
 
-    $value = Conf::$appConfig[$route];
+    $value = getValueAsString($route);
 
-    return expandString($value);
+    return expandStringValue($value);
 }
 
 /**
@@ -277,10 +349,10 @@ function getConfigValue($route, $defaultValue = false)
  *
  * @param string $route
  *            route to key
- * @param mixed $value
+ * @param string $value
  *            value to be set
  */
-function setConfigValue(string $route, $value): void
+function setConfigStringValue(string $route, string $value): void
 {
     Conf::$appConfig[$route] = $value;
 }
@@ -303,7 +375,7 @@ function addConfigValue(string $route, $value): void
 /**
  * Validating key existance
  *
- * @param mixed $route
+ * @param string[]|string $route
  *            route to key
  * @return bool true if the key exists, false otherwise
  */
@@ -319,7 +391,7 @@ function configKeyExists($route): bool
 /**
  * Deleting config value
  *
- * @param mixed $route
+ * @param string[]|string $route
  *            route to key
  * @return bool true if the key was deleted, false otherwise
  */
@@ -353,7 +425,7 @@ function deleteConfigValue($route): bool
  */
 function addConnectionToConfig(string $name, string $dsn, string $user, string $password): void
 {
-    setConfigValue($name . '/dsn', $dsn);
-    setConfigValue($name . '/user', $user);
-    setConfigValue($name . '/password', $password);
+    setConfigStringValue($name . '/dsn', $dsn);
+    setConfigStringValue($name . '/user', $user);
+    setConfigStringValue($name . '/password', $password);
 }
