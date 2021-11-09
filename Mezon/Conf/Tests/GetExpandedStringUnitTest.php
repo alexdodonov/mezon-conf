@@ -22,7 +22,7 @@ class GetExpandedStringUnitTest extends TestCase
     }
 
     /**
-     * Testing method getExpandedConfigValue
+     * Testing method getExpandedConfigValueAsString
      */
     public function testGetExpandedString(): void
     {
@@ -31,14 +31,14 @@ class GetExpandedStringUnitTest extends TestCase
         Conf::setConfigValue('var', 'var');
 
         // test body
-        $result = Conf::getExpandedConfigValue('some-var');
+        $result = Conf::getExpandedConfigValueAsString('some-var');
 
         // assertions
         $this->assertEquals('some var', $result);
     }
 
     /**
-     * Testing method getExpandedConfigValue for unexisting
+     * Testing method getExpandedConfigValueAsString for unexisting
      */
     public function testGetExpandedStringUnexistingSubvar(): void
     {
@@ -46,7 +46,7 @@ class GetExpandedStringUnitTest extends TestCase
         Conf::setConfigValue('some-var', 'some {var}');
 
         // test body
-        $result = Conf::getExpandedConfigValue('some-var');
+        $result = Conf::getExpandedConfigValueAsString('some-var');
 
         // assertions
         $this->assertEquals('some {var}', $result);
@@ -58,9 +58,9 @@ class GetExpandedStringUnitTest extends TestCase
     public function testGetExpandedStringUnexistingVar(): void
     {
         // test body
-        $result = Conf::getExpandedConfigValue('some-var');
+        $result = Conf::getExpandedConfigValueAsString('some-var');
 
         // assertions
-        $this->assertFalse($result);
+        $this->assertEquals('', $result);
     }
 }

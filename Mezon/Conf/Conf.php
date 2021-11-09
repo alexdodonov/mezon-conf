@@ -45,10 +45,26 @@ class Conf
      * @param mixed $defaultValue
      *            Default value if the key was not found
      * @return mixed Key value
+     * @deprecated Use getConfigValueAsString
      */
     public static function getConfigValue($route, $defaultValue = false)
     {
-        return \Mezon\Conf\getConfigValue($route, $defaultValue);
+        return getConfigValue($route, $defaultValue);
+    }
+    
+    /**
+     * Function returns specified config key
+     * If the key does not exists then $defaultValue will be returned
+     *
+     * @param string|array $route
+     *            Key route in config
+     * @param mixed $defaultValue
+     *            Default value if the key was not found
+     * @return string Key value
+     */
+    public static function getConfigValueAsString($route, string $defaultValue = '')
+    {
+        return getConfigValue($route, $defaultValue);
     }
 
     /**
@@ -61,7 +77,7 @@ class Conf
      */
     public static function setConfigValue(string $route, $value): void
     {
-        \Mezon\Conf\setConfigValue($route, $value);
+        setConfigValue($route, $value);
     }
 
     /**
@@ -87,7 +103,7 @@ class Conf
      */
     public static function addConfigValue(string $route, $value): void
     {
-        \Mezon\Conf\addConfigValue($route, $value);
+        addConfigValue($route, $value);
     }
 
     /**
@@ -99,7 +115,7 @@ class Conf
      */
     public static function configKeyExists($route): bool
     {
-        return \Mezon\Conf\configKeyExists($route);
+        return configKeyExists($route);
     }
 
     /**
@@ -111,7 +127,7 @@ class Conf
      */
     public static function deleteConfigValue($route): bool
     {
-        return \Mezon\Conf\deleteConfigValue($route);
+        return deleteConfigValue($route);
     }
 
     /**
@@ -128,7 +144,7 @@ class Conf
      */
     public static function addConnectionToConfig(string $name, string $dsn, string $user, string $password): void
     {
-        \Mezon\Conf\addConnectionToConfig($name, $dsn, $user, $password);
+        addConnectionToConfig($name, $dsn, $user, $password);
     }
 
     /**
@@ -140,7 +156,7 @@ class Conf
      */
     public static function expandString($value)
     {
-        return \Mezon\Conf\expandString($value);
+        return expandString($value);
     }
 
     /**
@@ -151,10 +167,25 @@ class Conf
      * @param mixed $defaultValue
      *            default value
      * @return mixed expandend config value
+     * @deprecated Use getExpandedConfigValueAsString
      */
     public static function getExpandedConfigValue($route, $defaultValue = false)
     {
-        return expandString(\Mezon\Conf\getConfigValue($route, $defaultValue));
+        return expandString(getConfigValue($route, $defaultValue));
+    }
+
+    /**
+     * Method returns expanded config string
+     *
+     * @param mixed $route
+     *            route to key
+     * @param string $defaultValue
+     *            default value
+     * @return string expandend config value
+     */
+    public static function getExpandedConfigValueAsString($route, string $defaultValue = ''): string
+    {
+        return expandString(static::getConfigValueAsString($route, $defaultValue));
     }
 
     /**

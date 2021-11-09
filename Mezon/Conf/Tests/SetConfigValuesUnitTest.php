@@ -14,7 +14,7 @@ class SetConfigValuesUnitTest extends TestCase
     /**
      *
      * {@inheritdoc}
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
     protected function setUp(): void
     {
@@ -34,7 +34,7 @@ class SetConfigValuesUnitTest extends TestCase
         ]);
 
         // assertions
-        $this->assertEquals('value1', Conf::getConfigValue('setting1'));
-        $this->assertEquals('value2', Conf::getConfigValue('setting2'));
+        $this->assertEquals('value1', Conf::getConfigValueAsString('setting1'));
+        $this->assertEquals('value2', Conf::getConfigValueAsString('setting2'));
     }
 }

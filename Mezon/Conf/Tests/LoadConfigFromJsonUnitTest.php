@@ -14,7 +14,7 @@ class LoadConfigFromJsonUnitTest extends TestCase
     /**
      *
      * {@inheritdoc}
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
     protected function setUp(): void
     {
@@ -30,6 +30,6 @@ class LoadConfigFromJsonUnitTest extends TestCase
         Conf::loadConfigFromJson(__DIR__ . '/Data/Conf.json');
 
         // assertions
-        $this->assertEquals('value', Conf::getConfigValue('route'));
+        $this->assertEquals('value', Conf::getConfigValueAsString('route'));
     }
 }

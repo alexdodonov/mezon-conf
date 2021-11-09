@@ -14,7 +14,7 @@ class ConfUnitTest extends TestCase
     /**
      *
      * {@inheritdoc}
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
     protected function setUp(): void
     {
@@ -27,7 +27,7 @@ class ConfUnitTest extends TestCase
      */
     public function testSetExistingKey(): void
     {
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             '@app-http-path'
         ]);
 
@@ -35,7 +35,7 @@ class ConfUnitTest extends TestCase
 
         Conf::setConfigValue('@app-http-path', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             '@app-http-path'
         ]);
 
@@ -48,13 +48,13 @@ class ConfUnitTest extends TestCase
      */
     public function testSetUnexistingKey(): void
     {
-        $this->assertFalse(Conf::getConfigValue([
+        $this->assertEquals('', Conf::getConfigValueAsString([
             'unexisting-key'
         ]));
 
         Conf::setConfigValue('unexisting-key', 'set-value');
 
-        $this->assertEquals('set-value', Conf::getConfigValue([
+        $this->assertEquals('set-value', Conf::getConfigValueAsString([
             'unexisting-key'
         ]));
     }
@@ -65,7 +65,7 @@ class ConfUnitTest extends TestCase
      */
     public function testSetComplexUnexistingKey(): void
     {
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'res',
             'images',
             'unexisting-key'
@@ -73,7 +73,7 @@ class ConfUnitTest extends TestCase
 
         $this->assertEquals(false, $value, 'Invalid res/images/unexisting-key processing');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'res',
             'images',
             'unexisting-key'
@@ -83,7 +83,7 @@ class ConfUnitTest extends TestCase
 
         Conf::setConfigValue('res/images/unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'res',
             'images',
             'unexisting-key'
@@ -97,7 +97,7 @@ class ConfUnitTest extends TestCase
      */
     public function testAddComplexExistingArray(): void
     {
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'res',
             'css'
         ]);
@@ -106,7 +106,7 @@ class ConfUnitTest extends TestCase
 
         Conf::addConfigValue('res/css', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'res',
             'css'
         ]);
@@ -123,7 +123,7 @@ class ConfUnitTest extends TestCase
             'unexisting-key'
         ]);
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'unexisting-key'
         ]);
 
@@ -131,7 +131,7 @@ class ConfUnitTest extends TestCase
 
         Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'unexisting-key'
         ]);
 
@@ -147,7 +147,7 @@ class ConfUnitTest extends TestCase
             'unexisting-key'
         ]);
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'unexisting-key'
         ]);
 
@@ -155,7 +155,7 @@ class ConfUnitTest extends TestCase
 
         Conf::addConfigValue('unexisting-key', 'set-value');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'unexisting-key'
         ]);
 
@@ -170,7 +170,7 @@ class ConfUnitTest extends TestCase
         Conf::addConfigValue('unexisting-key', 'set-value-1');
         Conf::addConfigValue('unexisting-key', 'set-value-2');
 
-        $value = Conf::getConfigValue([
+        $value = Conf::getConfigValueAsString([
             'unexisting-key'
         ]);
 
@@ -184,7 +184,7 @@ class ConfUnitTest extends TestCase
     {
         Conf::setConfigValue('f1/f2/unexisting-key', 'set-value-1');
 
-        $value = Conf::getConfigValue('f1/f2/unexisting-key');
+        $value = Conf::getConfigValueAsString('f1/f2/unexisting-key');
 
         $this->assertEquals('set-value-1', $value);
     }
@@ -196,13 +196,13 @@ class ConfUnitTest extends TestCase
     {
         Conf::setConfigValue('key-1', 'value');
 
-        $value = Conf::getConfigValue('key-1');
+        $value = Conf::getConfigValueAsString('key-1');
 
         $this->assertEquals('value', $value, 'Invalid setting value');
 
         Conf::deleteConfigValue('key-1');
 
-        $value = Conf::getConfigValue('key-1', false);
+        $value = Conf::getConfigValueAsString('key-1', false);
 
         $this->assertEquals(false, $value);
     }
@@ -214,13 +214,13 @@ class ConfUnitTest extends TestCase
     {
         Conf::setConfigValue('key-2/key-3', 'value');
 
-        $value = Conf::getConfigValue('key-2/key-3');
+        $value = Conf::getConfigValueAsString('key-2/key-3');
 
         $this->assertEquals('value', $value, 'Invalid setting value');
 
         Conf::deleteConfigValue('key-2/key-3');
 
-        $value = Conf::getConfigValue('key-2/key-3', false);
+        $value = Conf::getConfigValueAsString('key-2/key-3', false);
 
         $this->assertEquals(false, $value);
     }
@@ -234,7 +234,7 @@ class ConfUnitTest extends TestCase
 
         Conf::deleteConfigValue('key-4/key-5');
 
-        $value = Conf::getConfigValue('key-4', false);
+        $value = Conf::getConfigValueAsString('key-4', false);
 
         $this->assertEquals(false, $value);
     }
@@ -264,13 +264,13 @@ class ConfUnitTest extends TestCase
     {
         Conf::addConnectionToConfig('connection', 'dsn', 'user', 'password');
 
-        $value = Conf::getConfigValue('connection/dsn', false);
+        $value = Conf::getConfigValueAsString('connection/dsn', '');
         $this->assertEquals('dsn', $value, 'Key connection/dsn was not found');
 
-        $value = Conf::getConfigValue('connection/user', false);
+        $value = Conf::getConfigValueAsString('connection/user', '');
         $this->assertEquals('user', $value, 'Key connection/user was not found');
 
-        $value = Conf::getConfigValue('connection/password', false);
+        $value = Conf::getConfigValueAsString('connection/password', '');
         $this->assertEquals('password', $value, 'Key connection/password was not found');
     }
 }
