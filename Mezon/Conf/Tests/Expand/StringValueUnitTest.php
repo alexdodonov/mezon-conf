@@ -1,5 +1,5 @@
 <?php
-namespace Mezon\Conf\Tests;
+namespace Mezon\Conf\Tests\Expand;
 
 use PHPUnit\Framework\TestCase;
 use Mezon\Conf\Conf;
@@ -8,13 +8,13 @@ use Mezon\Conf\Conf;
  *
  * @psalm-suppress PropertyNotSetInConstructor
  */
-class ExpandStringUnitTest extends TestCase
+class StringValueUnitTest extends TestCase
 {
 
     /**
      *
      * {@inheritdoc}
-     * @see \PHPUnit\Framework\TestCase::setUp()
+     * @see TestCase::setUp()
      */
     protected function setUp(): void
     {
@@ -22,7 +22,7 @@ class ExpandStringUnitTest extends TestCase
     }
 
     /**
-     * Testing method expandString
+     * Testing method expandStringValue
      */
     public function testExpandString(): void
     {
@@ -30,6 +30,6 @@ class ExpandStringUnitTest extends TestCase
         Conf::setConfigValue('var', 'val');
 
         // test body and assertions
-        $this->assertEquals('val', Conf::expandString('{var}'));
+        $this->assertEquals('val', Conf::expandStringValue('{var}'));
     }
 }
