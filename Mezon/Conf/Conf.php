@@ -407,4 +407,22 @@ class Conf
 
         return $value;
     }
+
+    /**
+     * Method gts value of any type from config
+     *
+     * @param string $route
+     *            key of the getting value
+     * @param ?mixed $defaultValue
+     *            default value
+     * @return ?mixed config value
+     */
+    public static function getValue(string $route, $defaultValue = null)
+    {
+        if (! isset(Conf::$appConfig[$route])) {
+            return $defaultValue;
+        }
+
+        return Conf::$appConfig[$route];
+    }
 }
