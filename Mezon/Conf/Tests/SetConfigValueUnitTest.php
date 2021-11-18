@@ -23,15 +23,27 @@ class SetConfigValueUnitTest extends TestCase
     }
 
     /**
-     * Testing method setConfigValue
+     * Testing method setConfigValue for object
      */
-    public function testSetConfigValue(): void
+    public function testSetConfigValueForObject(): void
     {
         // setup
         Conf::setConfigValue('f', $f = new \stdClass());
 
         // test body and assertions
         $this->assertEquals($f, Conf::getConfigValueAsObject('f'));
+    }
+
+    /**
+     * Testing method setConfigValue for bool
+     */
+    public function testSetConfigValueForBool(): void
+    {
+        // setup
+        Conf::setConfigValue('f', true);
+
+        // test body and assertions
+        $this->assertTrue(Conf::getValue('f'));
     }
 
     /**
@@ -45,6 +57,6 @@ class SetConfigValueUnitTest extends TestCase
         $this->expectExceptionMessage('Unsupported value type');
 
         // test body
-        Conf::setConfigValue('key', true);
+        Conf::setConfigValue('key', 1.1);
     }
 }

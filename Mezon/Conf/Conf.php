@@ -104,6 +104,8 @@ class Conf
             static::setConfigObjectValue($route, $value);
         } elseif (is_array($value)) {
             static::setConfigArrayValue($route, $value);
+        } elseif (is_bool($value)) {
+            static::setConfigBoolValue($route, $value);
         } else {
             throw (new \Exception('Unsupported value type', - 1));
         }
@@ -225,6 +227,19 @@ class Conf
      *            value to be set
      */
     public static function setConfigStringValue(string $route, string $value): void
+    {
+        Conf::$appConfig[$route] = $value;
+    }
+    
+    /**
+     * Function sets specified config key with value $value
+     *
+     * @param string $route
+     *            route to key
+     * @param bool $value
+     *            value to be set
+     */
+    public static function setConfigBoolValue(string $route, bool $value): void
     {
         Conf::$appConfig[$route] = $value;
     }
