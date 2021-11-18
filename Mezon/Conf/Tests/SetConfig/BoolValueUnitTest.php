@@ -1,5 +1,5 @@
 <?php
-namespace Mezon\Conf\Tests\GetValue;
+namespace Mezon\Conf\Tests\SetConfig;
 
 use PHPUnit\Framework\TestCase;
 use Mezon\Conf\Conf;
