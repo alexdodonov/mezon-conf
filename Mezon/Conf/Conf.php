@@ -136,6 +136,7 @@ class Conf
      */
     public static function addConfigValue(string $route, $value): void
     {
+        // TODO make typed versions and remove this one
         Conf::$appConfig[$route] = [
             $value
         ];
@@ -241,6 +242,7 @@ class Conf
      */
     public static function setConfigBoolValue(string $route, bool $value): void
     {
+        // TODO add getValueAsBool, because we have typed setter and do not have typed getter
         Conf::$appConfig[$route] = $value;
     }
 
@@ -267,6 +269,7 @@ class Conf
      */
     public static function setConfigArrayValue(string $route, array $value): void
     {
+        // TODO remove word 'Config' from methods names, because they are calld like Conf::... so we new that we work with config
         Conf::$appConfig[$route] = $value;
     }
 
@@ -434,6 +437,7 @@ class Conf
      */
     public static function getValue(string $route, $defaultValue = null)
     {
+        // TODO remove this method
         if (! isset(Conf::$appConfig[$route])) {
             return $defaultValue;
         }
