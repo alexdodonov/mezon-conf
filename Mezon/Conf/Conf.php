@@ -242,7 +242,6 @@ class Conf
      */
     public static function setConfigBoolValue(string $route, bool $value): void
     {
-        // TODO add getValueAsBool, because we have typed setter and do not have typed getter
         Conf::$appConfig[$route] = $value;
     }
 
@@ -313,6 +312,27 @@ class Conf
         }
 
         throw (new \Exception('Value is not a string: ' . $route, - 1));
+    }
+
+    /**
+     * Method returns config item as string
+     *
+     * @param string $route
+     *            key
+     * @param bool $defaultValue
+     * @return bool value
+     */
+    public static function getValueAsBool(string $route, bool $defaultValue = false): bool
+    {
+        if (! isset(Conf::$appConfig[$route])) {
+            return $defaultValue;
+        }
+
+        if (is_bool(Conf::$appConfig[$route])) {
+            return Conf::$appConfig[$route];
+        }
+
+        throw (new \Exception('Value is not a bool: ' . $route, - 1));
     }
 
     /**

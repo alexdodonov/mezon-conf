@@ -27,6 +27,7 @@ class GetValueUnitTest extends TestCase
     public function testGetValue(): void
     {
         // setup
+        Conf::setConfigBoolValue('bool', true);
         Conf::setConfigStringValue('string', $expectedString = 'str');
         Conf::setConfigObjectValue('object', $expectedObject = new \stdClass());
         Conf::setConfigArrayValue('array', $expectedArray = [
@@ -38,6 +39,7 @@ class GetValueUnitTest extends TestCase
         $this->assertEquals($expectedString, Conf::getValue('string'));
         $this->assertEquals($expectedObject, Conf::getValue('object'));
         $this->assertEquals($expectedArray, Conf::getValue('array'));
+        $this->assertTrue(Conf::getValue('bool'));
     }
 
     /**
